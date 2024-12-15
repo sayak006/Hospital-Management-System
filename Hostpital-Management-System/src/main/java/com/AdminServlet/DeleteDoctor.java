@@ -1,0 +1,35 @@
+package com.AdminServlet;
+
+import java.io.IOException;
+
+import com.dao.DoctorDao;
+import com.db.DBConnect;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+@WebServlet("/DeleteDoctor")
+public class DeleteDoctor extends HttpServlet {
+
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		int id = Integer.parseInt(req.getParameter("id"));
+
+		DoctorDao dao = new DoctorDao(DBConnect.getConn());
+
+		HttpSession session = req.getSession();
+		if (dao.deleteDoctor(id)) {
+			session.setAttribute("succMsg", "Doctor Delete Successfully");
+			resp.sendRedirect("admin/view_doctor.jsp");
+		} else {
+			session.setAttribute("errorMsg", "Something Wrong On Server");
+			resp.sendRedirect("admin/view_doctor.jsp");
+		}
+	}
+
+}
